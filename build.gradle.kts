@@ -1,3 +1,5 @@
+val cucumber_version: String by project
+
 plugins {
     kotlin("jvm") version "1.9.24"
     application
@@ -13,10 +15,47 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    testImplementation("io.cucumber:cucumber-java:${cucumber_version}")
+    testImplementation("io.cucumber:cucumber-junit:${cucumber_version}")
 }
 
-tasks.test {
-    useJUnitPlatform()
+val cucumberRuntime by configurations.creating {
+    extendsFrom(configurations.testImplementation.get())
+}
+
+tasks {
+    test {
+        useJUnitPlatform()
+    }
+
+    register<JavaExec>("acceptanceTest") {
+        group = "verification"
+        description = "Runs Cucumber acceptance tests"
+
+        dependsOn("testClasses", "mainClasses")
+
+        mainClass.set("io.cucumber.core.cli.Main")
+
+        classpath = cucumberRuntime +
+                sourceSets.main.get().output +
+                sourceSets.test.get().output
+
+        args(
+            "--glue", "org.aithana.platform.server.steps",
+            "--plugin", "pretty",
+            "--plugin", "html:build/reports/cucumber/acceptance-test-report.html",
+            "src/test/resources/features"
+        )
+
+        systemProperties(System.getProperties().mapKeys { it.key as String })
+
+        doLast {
+            val result = executionResult.get()
+            if (result.exitValue != 0) {
+                throw GradleException("Cucumber acceptance tests failed! Check the reports")
+            }
+        }
+    }
 }
 
 kotlin {
