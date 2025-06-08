@@ -1,3 +1,5 @@
+![aithana logo][logo]
+
 # Aithana Platform Server
 
 This is the server for the Aithana Platform.
@@ -25,4 +27,5 @@ To contribute to the project, follow this project's [contributing guidelines][co
 
 ---
 
+[logo]: ./aithana-banner.png
 [contributing]: ./CONTRIBUTING.md
