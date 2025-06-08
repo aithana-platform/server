@@ -1,4 +1,5 @@
 val cucumber_version: String by project
+val mockk_version: String by project
 
 plugins {
     kotlin("jvm") version "1.9.24"
@@ -17,6 +18,7 @@ dependencies {
     testImplementation(kotlin("test"))
     testImplementation("io.cucumber:cucumber-java:${cucumber_version}")
     testImplementation("io.cucumber:cucumber-junit:${cucumber_version}")
+    testImplementation("io.mockk:mockk:${mockk_version}")
 }
 
 val cucumberRuntime by configurations.creating {
