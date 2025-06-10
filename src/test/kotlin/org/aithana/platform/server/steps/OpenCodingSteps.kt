@@ -13,6 +13,10 @@ import kotlin.test.assertTrue
 class OpenCodingSteps {
     @MockK
     private lateinit var mockCoder: Coder
+    @MockK
+    private lateinit var mockImporter: RawDataImporter
+    @MockK
+    private lateinit var mockExporter: CodedTableExporter
     private lateinit var table: QuotesTable
     private lateinit var codedTable: CodedQuotesTable
 
@@ -54,7 +58,7 @@ class OpenCodingSteps {
         every { mockCoder.code(any(), SIMPLEST_QUOTE) } returns setOf("simplest")
         every { mockCoder.code(any(), SIMPLE_QUOTE) } returns setOf("simple")
         every { mockCoder.code(any(), COMPLEX_QUOTE) } returns setOf("one code", "another code")
-        val aithana = Aithana(mockCoder)
+        val aithana = Aithana(mockCoder, mockImporter, mockExporter)
         this.codedTable = aithana.openCode(this.table)
     }
 

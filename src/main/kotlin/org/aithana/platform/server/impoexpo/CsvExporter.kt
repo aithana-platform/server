@@ -4,8 +4,10 @@ import org.aithana.platform.server.core.CodedQuotesTable
 import org.aithana.platform.server.core.CodedTableExporter
 import java.io.Writer
 
-class CsvExporter: CodedTableExporter {
-    override fun export(table: CodedQuotesTable, writer: Writer) {
+class CsvExporter(
+    private val writer: Writer
+): CodedTableExporter {
+    override fun export(table: CodedQuotesTable) {
         val nCols = Csv.IndexMapper.entries.size
         val strBuilder = StringBuilder(Csv.OUTPUT_HEADERS.joinToString(Csv.SEPARATOR))
         strBuilder.append("\n")
@@ -13,7 +15,7 @@ class CsvExporter: CodedTableExporter {
         val rowFormatter = this.createRowFormatter(strBuilder, nCols)
         table.forEachCodedRow(rowFormatter)
 
-        writer.write(strBuilder.toString())
+        this.writer.write(strBuilder.toString())
     }
 
     private fun createRowFormatter(strBuilder: java.lang.StringBuilder, nCols: Int): (String, String, String, String?) -> Unit {

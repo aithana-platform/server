@@ -23,7 +23,7 @@ class CsvExporterTest {
         MockKAnnotations.init(this)
         every { mockWriter.write(any<String>()) } returns Unit
 
-        underTest = CsvExporter()
+        underTest = CsvExporter(mockWriter)
     }
 
     @Test
@@ -32,7 +32,7 @@ class CsvExporterTest {
         val emptyTable = Table()
 
         // when
-        underTest.export(emptyTable, mockWriter)
+        underTest.export(emptyTable)
 
         // then
         val expectedHeadersOnly = "$EXPECTED_HEADERS\n"
@@ -53,7 +53,7 @@ class CsvExporterTest {
         )
 
         // when
-        underTest.export(table, mockWriter)
+        underTest.export(table)
 
         // then
         val expected = "$EXPECTED_HEADERS\n" +
@@ -79,7 +79,7 @@ class CsvExporterTest {
         )
 
         // when
-        underTest.export(table, mockWriter)
+        underTest.export(table)
 
         // then
         val expected = "$EXPECTED_HEADERS\n" +

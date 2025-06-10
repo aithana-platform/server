@@ -11,19 +11,20 @@ class CsvImporterTest {
 
     private lateinit var underTest: CsvImporter
 
-    @BeforeTest
-    fun setup() {
-        underTest = CsvImporter()
+    private fun setupUnderTestInstance(fileID: String) {
+        val fullName = fullTestCsvFilename(fileID)
+        val reader = FileReader(fullName)
+
+        this.underTest = CsvImporter(reader)
     }
 
     @Test
     fun `importing an empty CSV should result in an empty table`() {
         // given
-        val emptyCsvFileName = fullTestCsvFilename("empty")
-        val reader = FileReader(emptyCsvFileName)
+        setupUnderTestInstance("empty")
 
         // when
-        val imported = underTest.import(reader)
+        val imported = underTest.import()
 
         // then
         assertTrue { imported.isEmpty() }
@@ -32,11 +33,10 @@ class CsvImporterTest {
     @Test
     fun `importing a single row CSV should result in a single row table`() {
         // given
-        val singleRowWithHeaderCsv = fullTestCsvFilename("single_row")
-        val reader = FileReader(singleRowWithHeaderCsv)
+        setupUnderTestInstance("single_row")
 
         // when
-        val imported = underTest.import(reader)
+        val imported = underTest.import()
 
         // then
         assertFalse { imported.isEmpty() }
@@ -46,11 +46,10 @@ class CsvImporterTest {
     @Test
     fun `importing a CSV with a malformed row should throw indicating in which row`() {
         // given
-        val malformedRowCsvFile = fullTestCsvFilename("malformed_row")
-        val reader = FileReader(malformedRowCsvFile)
+        setupUnderTestInstance("malformed_row")
 
         // when ... then
-        val exception = assertThrows<ImportingException> { underTest.import(reader) }
+        val exception = assertThrows<ImportingException> { underTest.import() }
         assertTrue { exception.localizedMessage.contains("row 1") }
     }
 

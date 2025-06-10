@@ -6,9 +6,12 @@ import org.aithana.platform.server.core.Table
 import java.io.Reader
 import java.lang.IndexOutOfBoundsException
 
-class CsvImporter: RawDataImporter {
-    override fun import(reader: Reader): QuotesTable {
-        val content = reader.readText()
+class CsvImporter(
+    private val reader: Reader
+): RawDataImporter {
+
+    override fun import(): QuotesTable {
+        val content = this.reader.readText()
 
         return this.parseFileContent(content)
     }
