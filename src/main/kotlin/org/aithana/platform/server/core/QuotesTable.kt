@@ -1,4 +1,4 @@
-package org.aithana.platform.server
+package org.aithana.platform.server.core
 
 interface QuotesTable {
     fun quotes(): Set<String>

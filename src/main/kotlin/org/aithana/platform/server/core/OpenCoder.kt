@@ -1,4 +1,4 @@
-package org.aithana.platform.server
+package org.aithana.platform.server.core
 
 import com.google.genai.Client
 import com.google.genai.types.GenerateContentConfig
@@ -17,7 +17,7 @@ class OpenCoder(
     private val client: Client = Client()
     private val textHelper = TextHelper()
 
-    override fun code(section: String, quote: Quote): Set<Code> {
+    override fun code(section: String, quote: String): Set<String> {
         val content = this.client.models.generateContent(
             MODEL_VERSION,
             this.buildPrompt(section, quote),
@@ -45,7 +45,7 @@ class OpenCoder(
             .build()
     }
 
-    private fun buildPrompt(section: String, quote: Quote): String {
+    private fun buildPrompt(section: String, quote: String): String {
         val template = this.resourcesLoader.loadFile(PROMPT_TEMPLATE_FILENAME)
         val researchContext = this.resourcesLoader.loadFile(RESEARCH_CONTEXT_FILENAME)
 

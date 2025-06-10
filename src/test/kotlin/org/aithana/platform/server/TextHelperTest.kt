@@ -1,5 +1,7 @@
 package org.aithana.platform.server
 
+import org.aithana.platform.server.core.TextHelper
+import org.aithana.platform.server.core.TextHelperException
 import org.junit.jupiter.api.Assertions.*
 import kotlin.test.BeforeTest
 import kotlin.test.Test

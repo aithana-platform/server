@@ -1,5 +1,6 @@
 package org.aithana.platform.server
 
+import org.aithana.platform.server.core.Table
 import org.junit.jupiter.api.Assertions.*
 import kotlin.test.Test
 

@@ -7,6 +7,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import org.aithana.platform.server.*
+import org.aithana.platform.server.core.*
 import kotlin.test.assertTrue
 
 class OpenCodingSteps {

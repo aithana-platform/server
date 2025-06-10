@@ -1,4 +1,4 @@
-package org.aithana.platform.server
+package org.aithana.platform.server.core
 
 class Aithana(private val coder: Coder) {
     fun openCode(table: QuotesTable): CodedQuotesTable {
