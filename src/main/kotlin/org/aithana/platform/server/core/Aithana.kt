@@ -23,6 +23,8 @@ class Aithana(
     }
 
     fun run() {
-        TODO("Not yet implemented")
+        val quotesTable = importer.import()
+        val codedTable = this.openCode(quotesTable)
+        exporter.export(codedTable)
     }
 }
