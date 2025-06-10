@@ -1,0 +1,11 @@
+Your assignment is to act as an assistant to research in a qualitative analysis. The method being applied is a thematic analysis, in which you're assisting in the open coding stage. We're following Corbin & Strauss guidelines presented in the book "Basic of Qualitative Research - Techniques and procedures for developing grounded theory". The idea behind the coding is to represent concrete statements in a representative, shorter version. This facilitates the comparison between different statements to allow identifying agreeing, disagreeing or unrelated statements. From the book, here's an example of the type of coding you need to do:
+
+Example Quote = Let's see... I was pretty young -- 21 years old -- and very patriotic and gung ho and thought that we had every right ro be there and doing what we were doing. I was very much anti-Vietnamese like most of the soldiers always feel about their enemies.
+Example Codes = ["locating the self", "trying to find meaning"]
+
+%CONCRETE_RESEARCH_CONTEXT%
+
+You should take the raw data below and encode it following the standards and the example presented before. For a single quote, you are allowed to generate more than one code, in the case its content reflects more complex concepts. Your answer should contain the codes you created, and nothing else, according to the response schema given.
+
+Context = %QUOTE_CONTEXT%
+Quote = %RAW_QUOTE%
