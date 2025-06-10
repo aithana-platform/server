@@ -41,4 +41,8 @@ class Table(): CodedQuotesTable {
     override fun forEachRow(behavior: (artifactId: String, quote: String, section: String?) -> Unit) {
         this.rows.forEach { row -> behavior(row.artifactId, row.quote, row.section) }
     }
+
+    override fun forEachCodedRow(behavior: (artifactId: String, quote: String, code: String, section: String?) -> Unit) {
+        this.rows.forEach { row -> behavior(row.artifactId, row.quote, row.code, row.section) }
+    }
 }
