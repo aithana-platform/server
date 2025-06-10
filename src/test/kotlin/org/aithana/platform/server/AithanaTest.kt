@@ -4,7 +4,6 @@ import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import org.aithana.platform.server.core.*
-import org.aithana.platform.server.impoexpo.CsvExporter
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -19,12 +18,12 @@ class AithanaTest {
     @MockK
     private lateinit var mockExporter: CodedTableExporter
 
-    private lateinit var underTest: Aithana
+    private lateinit var underTest: AithanaImpl
 
     @BeforeTest
     fun setup() {
         MockKAnnotations.init(this)
-        underTest = Aithana(mockCoder, mockImporter, mockExporter)
+        underTest = AithanaImpl(mockCoder, mockImporter, mockExporter)
     }
 
     @Test

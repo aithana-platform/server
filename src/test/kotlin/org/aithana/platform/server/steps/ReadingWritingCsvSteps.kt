@@ -6,42 +6,31 @@ import io.cucumber.java.en.When
 import io.mockk.*
 import org.aithana.platform.server.core.*
 import org.aithana.platform.server.impoexpo.Csv
-import org.aithana.platform.server.impoexpo.CsvExporter
-import org.aithana.platform.server.impoexpo.CsvImporter
-import java.io.FileReader
 import java.io.FileWriter
 import java.io.Writer
 import kotlin.test.assertTrue
 
 class ReadingWritingCsvSteps {
-    private lateinit var importer: RawDataImporter
-    private lateinit var exporter: CodedTableExporter
-    private lateinit var writer: Writer
+    private val builder = AithanaBuilder()
+    private val writer: Writer = mockk<FileWriter>(relaxed = true)
 
     @Given("the {string} file with artifact ids, the sections of the artifact, and the text quotes")
-    fun foo(filename: String) {
-        val reader = FileReader(filename)
-        this.importer = CsvImporter(reader)
-
-        this.writer = mockk<FileWriter>(relaxed = true)
-        this.exporter = spyk(CsvExporter(writer))
+    fun setupBuilder(filename: String) {
+        this.builder
+            .importFromCsv(filename)
+            .exportToCsv(writer)
+            .openEncodeUsingGemini()
     }
 
     @When("I ask to run open coding on it")
-    fun fooTwo() {
-        val resourcesLoader = BaseResourcesLoader()
-        val geminiCoder = OpenCoder(resourcesLoader)
-        val aithana = Aithana(
-            geminiCoder,
-            importer,
-            exporter
-        )
-
-        aithana.run()
+    fun buildAndRun() {
+        this.builder
+            .build()
+            .process()
     }
 
     @Then("I get the result file with a new column with the codes for each quote")
-    fun fooThree() {
+    fun verifyWellFormedCsvOutput() {
         val slot = slot<String>()
         verify { writer.write(capture(slot)) }
 

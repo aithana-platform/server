@@ -6,7 +6,6 @@ import io.cucumber.java.en.When
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import org.aithana.platform.server.*
 import org.aithana.platform.server.core.*
 import kotlin.test.assertTrue
 
@@ -58,7 +57,7 @@ class OpenCodingSteps {
         every { mockCoder.code(any(), SIMPLEST_QUOTE) } returns setOf("simplest")
         every { mockCoder.code(any(), SIMPLE_QUOTE) } returns setOf("simple")
         every { mockCoder.code(any(), COMPLEX_QUOTE) } returns setOf("one code", "another code")
-        val aithana = Aithana(mockCoder, mockImporter, mockExporter)
+        val aithana = AithanaImpl(mockCoder, mockImporter, mockExporter)
         this.codedTable = aithana.openCode(this.table)
     }
 
