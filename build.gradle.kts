@@ -1,5 +1,6 @@
 val gemini_api_version: String by project
 val jackson_version: String by project
+val clikt_version: String by project
 val cucumber_version: String by project
 val mockk_version: String by project
 
@@ -20,6 +21,7 @@ dependencies {
     implementation("com.google.genai:google-genai:${gemini_api_version}")
     implementation("com.fasterxml.jackson.core:jackson-databind:${jackson_version}")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jackson_version}")
+    implementation("com.github.ajalt.clikt:clikt:${clikt_version}")
 
     testImplementation(kotlin("test"))
     testImplementation("io.cucumber:cucumber-java:${cucumber_version}")

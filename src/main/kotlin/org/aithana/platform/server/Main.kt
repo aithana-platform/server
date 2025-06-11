@@ -1,20 +1,10 @@
 package org.aithana.platform.server
 
-import org.aithana.platform.server.application.AithanaBuilder
+import com.github.ajalt.clikt.core.main
+import com.github.ajalt.clikt.core.subcommands
+import org.aithana.platform.server.presentation.cli.Aithana
+import org.aithana.platform.server.presentation.cli.aithana.BatchCsvInOut
 
-fun main(args: Array<String>) {
-    try {
-        val inputFileName = args[0]
-        val outputFileName = args[1]
-
-        AithanaBuilder()
-            .openEncodeUsingGemini()
-            .importFromCsv(inputFileName)
-            .exportToCsv(outputFileName)
-            .build()
-            .process()
-
-    } catch (ioobe: IndexOutOfBoundsException) {
-        throw RuntimeException("missing CLI parameter")
-    }
-}
+fun main(args: Array<String>) = Aithana()
+    .subcommands(BatchCsvInOut())
+    .main(args)
