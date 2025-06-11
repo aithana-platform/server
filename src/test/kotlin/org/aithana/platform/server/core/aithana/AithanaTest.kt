@@ -1,9 +1,13 @@
-package org.aithana.platform.server
+package org.aithana.platform.server.core.aithana
 
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import org.aithana.platform.server.core.*
+import org.aithana.platform.server.core.coder.Coder
+import org.aithana.platform.server.core.impoexpo.CodedTableExporter
+import org.aithana.platform.server.core.impoexpo.RawDataImporter
+import org.aithana.platform.server.core.model.QuotesTable
+import org.aithana.platform.server.core.model.Table
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.BeforeTest
 import kotlin.test.Test

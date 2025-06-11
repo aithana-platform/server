@@ -1,4 +1,4 @@
-package org.aithana.platform.server.core
+package org.aithana.platform.server.core.coder
 
 import java.io.BufferedReader
 import java.io.InputStreamReader

@@ -1,9 +1,10 @@
-package org.aithana.platform.server.core
+package org.aithana.platform.server.core.coder
 
 import com.google.genai.Client
 import com.google.genai.types.GenerateContentConfig
 import com.google.genai.types.Schema
 import com.google.genai.types.Type
+import org.aithana.platform.server.core.utils.TextHelper
 
 class OpenCoder(
     private val resourcesLoader: ResourcesLoader

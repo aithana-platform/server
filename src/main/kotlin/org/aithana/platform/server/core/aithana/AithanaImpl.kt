@@ -1,4 +1,11 @@
-package org.aithana.platform.server.core
+package org.aithana.platform.server.core.aithana
+
+import org.aithana.platform.server.core.coder.Coder
+import org.aithana.platform.server.core.impoexpo.CodedTableExporter
+import org.aithana.platform.server.core.impoexpo.RawDataImporter
+import org.aithana.platform.server.core.model.CodedQuotesTable
+import org.aithana.platform.server.core.model.QuotesTable
+import org.aithana.platform.server.core.model.Table
 
 class AithanaImpl(
     private val coder: Coder,

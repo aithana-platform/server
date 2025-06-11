@@ -1,7 +1,7 @@
 package org.aithana.platform.server.impoexpo
 
-import org.aithana.platform.server.core.CodedQuotesTable
-import org.aithana.platform.server.core.CodedTableExporter
+import org.aithana.platform.server.core.model.CodedQuotesTable
+import org.aithana.platform.server.core.impoexpo.CodedTableExporter
 import java.io.Writer
 
 class CsvExporter(

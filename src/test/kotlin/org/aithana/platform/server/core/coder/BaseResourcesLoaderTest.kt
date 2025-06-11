@@ -1,8 +1,5 @@
-package org.aithana.platform.server
+package org.aithana.platform.server.core.coder
 
-import org.aithana.platform.server.core.BaseResourcesLoader
-import org.aithana.platform.server.core.ResourcesFileNotFound
-import org.aithana.platform.server.core.ResourcesLoader
 import org.junit.jupiter.api.assertDoesNotThrow
 import kotlin.test.BeforeTest
 import kotlin.test.Test

@@ -1,8 +1,8 @@
 package org.aithana.platform.server.impoexpo
 
-import org.aithana.platform.server.core.QuotesTable
-import org.aithana.platform.server.core.RawDataImporter
-import org.aithana.platform.server.core.Table
+import org.aithana.platform.server.core.model.QuotesTable
+import org.aithana.platform.server.core.impoexpo.RawDataImporter
+import org.aithana.platform.server.core.model.Table
 import java.io.Reader
 import java.lang.IndexOutOfBoundsException
 

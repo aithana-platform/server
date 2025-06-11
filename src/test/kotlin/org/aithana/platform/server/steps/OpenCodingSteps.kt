@@ -6,7 +6,13 @@ import io.cucumber.java.en.When
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import org.aithana.platform.server.core.*
+import org.aithana.platform.server.core.aithana.AithanaImpl
+import org.aithana.platform.server.core.coder.Coder
+import org.aithana.platform.server.core.impoexpo.CodedTableExporter
+import org.aithana.platform.server.core.impoexpo.RawDataImporter
+import org.aithana.platform.server.core.model.CodedQuotesTable
+import org.aithana.platform.server.core.model.QuotesTable
+import org.aithana.platform.server.core.model.Table
 import kotlin.test.assertTrue
 
 class OpenCodingSteps {

@@ -1,6 +1,6 @@
 package org.aithana.platform.server
 
-import org.aithana.platform.server.core.AithanaBuilder
+import org.aithana.platform.server.application.AithanaBuilder
 
 fun main(args: Array<String>) {
     try {

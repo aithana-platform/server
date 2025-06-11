@@ -4,7 +4,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify
-import org.aithana.platform.server.core.Table
+import org.aithana.platform.server.core.model.Table
 import java.io.Writer
 import kotlin.test.BeforeTest
 import kotlin.test.Test

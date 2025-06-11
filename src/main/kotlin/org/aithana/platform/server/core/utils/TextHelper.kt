@@ -1,4 +1,4 @@
-package org.aithana.platform.server.core
+package org.aithana.platform.server.core.utils
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper

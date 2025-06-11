@@ -1,4 +1,4 @@
-package org.aithana.platform.server.core
+package org.aithana.platform.server.core.model
 
 class Table(): CodedQuotesTable {
     private data class Row(
