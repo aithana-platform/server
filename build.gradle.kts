@@ -76,7 +76,12 @@ tasks {
 }
 
 kotlin {
-    jvmToolchain(8)
+    jvmToolchain(11)
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 application {
