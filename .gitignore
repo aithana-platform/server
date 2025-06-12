@@ -1,5 +1,6 @@
 data/input/
 data/output/
+logs/
 
 .gradle
 build/
