@@ -22,6 +22,7 @@ class CsvExporterTest {
     fun setup() {
         MockKAnnotations.init(this)
         every { mockWriter.write(any<String>()) } returns Unit
+        every { mockWriter.flush() } returns Unit
 
         underTest = CsvExporter(mockWriter)
     }
@@ -86,5 +87,25 @@ class CsvExporterTest {
                 "$artifactId;$section;$quote;$code1\n" +
                 "$artifactId;$section;$quote;$code2\n"
         verify { mockWriter.write(expected) }
+    }
+
+    @Test
+    fun `exporting should call flush`() {
+        // given
+        val table = Table()
+        val artifactId = "foo"
+        val section = "one"
+        val quote = "foo bar baz"
+        val code = "nonsense"
+
+        table.append(
+            artifactId = artifactId, section = section, quote = quote, code = code
+        )
+
+        // when
+        underTest.export(table)
+
+        // then
+        verify { mockWriter.flush() }
     }
 }

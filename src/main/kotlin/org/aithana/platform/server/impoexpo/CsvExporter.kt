@@ -16,6 +16,7 @@ class CsvExporter(
         table.forEachCodedRow(rowFormatter)
 
         this.writer.write(strBuilder.toString())
+        this.writer.flush()
     }
 
     private fun createRowFormatter(strBuilder: java.lang.StringBuilder, nCols: Int): (String, String, String, String?) -> Unit {
