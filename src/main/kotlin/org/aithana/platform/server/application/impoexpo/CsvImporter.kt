@@ -1,4 +1,4 @@
-package org.aithana.platform.server.impoexpo
+package org.aithana.platform.server.application.impoexpo
 
 import org.aithana.platform.server.core.model.QuotesTable
 import org.aithana.platform.server.core.impoexpo.RawDataImporter

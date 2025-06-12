@@ -1,4 +1,4 @@
-package org.aithana.platform.server.impoexpo
+package org.aithana.platform.server.application.impoexpo
 
 import io.mockk.MockKAnnotations
 import io.mockk.every

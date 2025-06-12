@@ -10,8 +10,8 @@ import org.aithana.platform.server.core.impoexpo.CodedTableExporter
 import org.aithana.platform.server.core.impoexpo.ExporterLogger
 import org.aithana.platform.server.core.impoexpo.ImporterLogger
 import org.aithana.platform.server.core.impoexpo.RawDataImporter
-import org.aithana.platform.server.impoexpo.CsvExporter
-import org.aithana.platform.server.impoexpo.CsvImporter
+import org.aithana.platform.server.application.impoexpo.CsvExporter
+import org.aithana.platform.server.application.impoexpo.CsvImporter
 import java.io.FileReader
 import java.io.FileWriter
 import java.io.Writer

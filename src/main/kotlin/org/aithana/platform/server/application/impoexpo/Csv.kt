@@ -1,4 +1,4 @@
-package org.aithana.platform.server.impoexpo
+package org.aithana.platform.server.application.impoexpo
 
 object Csv {
     val INPUT_HEADERS = listOf("artifactId","section","quote")
