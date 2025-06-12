@@ -1,7 +1,8 @@
-package org.aithana.platform.server.core.coder
+package org.aithana.platform.server.application.coder
 
 import com.google.common.util.concurrent.RateLimiter
 import io.github.oshai.kotlinlogging.KotlinLogging
+import org.aithana.platform.server.core.coder.Coder
 
 private val logger = KotlinLogging.logger {  }
 

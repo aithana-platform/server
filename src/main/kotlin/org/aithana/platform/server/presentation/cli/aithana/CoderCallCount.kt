@@ -4,7 +4,7 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
 import org.aithana.platform.server.application.AithanaBuilder
-import org.aithana.platform.server.core.coder.RateCounter
+import org.aithana.platform.server.application.coder.RateCounter
 
 class CoderCallCount: CliktCommand() {
     private val input by option(help = "path to input file").required()
