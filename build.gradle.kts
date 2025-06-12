@@ -4,6 +4,7 @@ val clikt_version: String by project
 val slf4j_version: String by project
 val logback_version: String by project
 val klogging_version: String by project
+val guava_version: String by project
 val cucumber_version: String by project
 val mockk_version: String by project
 
@@ -27,6 +28,7 @@ dependencies {
     implementation("com.github.ajalt.clikt:clikt:${clikt_version}")
     implementation("org.slf4j:slf4j-api:${slf4j_version}")
     implementation("io.github.oshai:kotlin-logging-jvm:${klogging_version}")
+    implementation("com.google.guava:guava:${guava_version}")
 
     runtimeOnly("ch.qos.logback:logback-classic:${logback_version}")
 

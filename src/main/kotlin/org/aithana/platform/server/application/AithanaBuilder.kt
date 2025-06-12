@@ -2,10 +2,7 @@ package org.aithana.platform.server.application
 
 import org.aithana.platform.server.core.aithana.Aithana
 import org.aithana.platform.server.core.aithana.AithanaImpl
-import org.aithana.platform.server.core.coder.BaseResourcesLoader
-import org.aithana.platform.server.core.coder.Coder
-import org.aithana.platform.server.core.coder.CoderLogger
-import org.aithana.platform.server.core.coder.OpenCoder
+import org.aithana.platform.server.core.coder.*
 import org.aithana.platform.server.core.impoexpo.CodedTableExporter
 import org.aithana.platform.server.core.impoexpo.ExporterLogger
 import org.aithana.platform.server.core.impoexpo.ImporterLogger
@@ -17,6 +14,10 @@ import java.io.FileWriter
 import java.io.Writer
 
 class AithanaBuilder {
+    companion object {
+        private const val ALLOWED_RATE: Double = 1/6.0
+    }
+
     private lateinit var exporter: CodedTableExporter
     private lateinit var importer: RawDataImporter
     private lateinit var coder: Coder
@@ -24,7 +25,8 @@ class AithanaBuilder {
     fun openEncodeUsingGemini(): AithanaBuilder {
         val resourcesLoader = BaseResourcesLoader()
         val concreteCoder = OpenCoder(resourcesLoader)
-        this.coder = CoderLogger(concreteCoder)
+        this.coder = RateLimiter(concreteCoder, ALLOWED_RATE)
+        this.coder = CoderLogger(this.coder)
         return this
     }
 
