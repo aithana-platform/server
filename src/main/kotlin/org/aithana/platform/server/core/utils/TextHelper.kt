@@ -24,4 +24,15 @@ class TextHelper {
             throw TextHelperException(mie.localizedMessage)
         }
     }
+
+    fun printableCell(content: String?): String {
+        val maxLength = 12
+        val cellTemplate = "[%s]"
+
+        val formattedContent = if (content.isNullOrEmpty()) (0..(maxLength + 3)).joinToString("") { " " }
+        else if (content.length > maxLength) content.substring(0..maxLength) + "..."
+        else content.padEnd(maxLength + 3, ' ')
+
+        return String.format(cellTemplate, formattedContent)
+    }
 }

@@ -1,6 +1,9 @@
 val gemini_api_version: String by project
 val jackson_version: String by project
 val clikt_version: String by project
+val slf4j_version: String by project
+val logback_version: String by project
+val klogging_version: String by project
 val cucumber_version: String by project
 val mockk_version: String by project
 
@@ -22,6 +25,10 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:${jackson_version}")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jackson_version}")
     implementation("com.github.ajalt.clikt:clikt:${clikt_version}")
+    implementation("org.slf4j:slf4j-api:${slf4j_version}")
+    implementation("io.github.oshai:kotlin-logging-jvm:${klogging_version}")
+
+    runtimeOnly("ch.qos.logback:logback-classic:${logback_version}")
 
     testImplementation(kotlin("test"))
     testImplementation("io.cucumber:cucumber-java:${cucumber_version}")

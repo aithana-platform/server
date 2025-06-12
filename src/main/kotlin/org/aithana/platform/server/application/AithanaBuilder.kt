@@ -4,8 +4,11 @@ import org.aithana.platform.server.core.aithana.Aithana
 import org.aithana.platform.server.core.aithana.AithanaImpl
 import org.aithana.platform.server.core.coder.BaseResourcesLoader
 import org.aithana.platform.server.core.coder.Coder
+import org.aithana.platform.server.core.coder.CoderLogger
 import org.aithana.platform.server.core.coder.OpenCoder
 import org.aithana.platform.server.core.impoexpo.CodedTableExporter
+import org.aithana.platform.server.core.impoexpo.ExporterLogger
+import org.aithana.platform.server.core.impoexpo.ImporterLogger
 import org.aithana.platform.server.core.impoexpo.RawDataImporter
 import org.aithana.platform.server.impoexpo.CsvExporter
 import org.aithana.platform.server.impoexpo.CsvImporter
@@ -20,23 +23,25 @@ class AithanaBuilder {
 
     fun openEncodeUsingGemini(): AithanaBuilder {
         val resourcesLoader = BaseResourcesLoader()
-        this.coder = OpenCoder(resourcesLoader)
+        val concreteCoder = OpenCoder(resourcesLoader)
+        this.coder = CoderLogger(concreteCoder)
         return this
     }
 
     fun encodeUsingCustomCoder(custom: Coder): AithanaBuilder {
-        this.coder = custom
+        this.coder = CoderLogger(custom)
         return this
     }
 
     fun importFromCsv(fileName: String): AithanaBuilder {
         val reader = FileReader(fileName)
-        this.importer = CsvImporter(reader)
+        val concreteImporter = CsvImporter(reader)
+        this.importer = ImporterLogger(concreteImporter)
         return this
     }
 
     fun customImporter(custom: RawDataImporter): AithanaBuilder {
-        this.importer = custom
+        this.importer = ImporterLogger(custom)
         return this
     }
 
@@ -46,12 +51,13 @@ class AithanaBuilder {
     }
 
     fun exportToCsv(writer: Writer): AithanaBuilder {
-        this.exporter = CsvExporter(writer)
+        val concreteExporter = CsvExporter(writer)
+        this.exporter = ExporterLogger(concreteExporter)
         return this
     }
 
     fun customExporter(custom: CodedTableExporter): AithanaBuilder {
-        this.exporter = custom
+        this.exporter = ExporterLogger(custom)
         return this
     }
 
