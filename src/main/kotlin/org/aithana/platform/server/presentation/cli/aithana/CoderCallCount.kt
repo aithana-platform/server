@@ -15,6 +15,8 @@ class CoderCallCount: CliktCommand() {
 
         AithanaBuilder()
             .encodeUsingCustomCoder(counter)
+            .disableLogging()
+            .limitEncodingRateTo(3/2.0)
             .importFromCsv(input)
             .exportToCsv(output)
             .build()

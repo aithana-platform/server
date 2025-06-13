@@ -18,35 +18,51 @@ import java.io.Writer
 
 class AithanaBuilder {
     companion object {
-        private const val ALLOWED_RATE: Double = 1/6.0
+        private const val DEFAULT_RATE_LIMIT: Double = 1/6.0
+        private const val ENABLED_BY_DEFAULT: Boolean = true
     }
 
     private lateinit var exporter: CodedTableExporter
     private lateinit var importer: RawDataImporter
     private lateinit var coder: Coder
 
+    private var permitsPerSecond: Double = DEFAULT_RATE_LIMIT
+    private var enableLogging: Boolean = ENABLED_BY_DEFAULT
+
+    fun limitEncodingRateTo(permitsPerSecond: Double?): AithanaBuilder {
+        this.permitsPerSecond = permitsPerSecond ?: DEFAULT_RATE_LIMIT
+
+        return this
+    }
+
+    fun enableLogging() = setLogging(true)
+    fun disableLogging() = setLogging(false)
+
+    fun setLogging(enableLogging: Boolean): AithanaBuilder {
+        this.enableLogging = enableLogging
+        return this
+    }
+
     fun openEncodeUsingGemini(): AithanaBuilder {
         val resourcesLoader = BaseResourcesLoader()
-        val concreteCoder = OpenCoder(resourcesLoader)
-        this.coder = RateLimiter(concreteCoder, ALLOWED_RATE)
-        this.coder = CoderLogger(this.coder)
+        this.coder = OpenCoder(resourcesLoader)
+
         return this
     }
 
     fun encodeUsingCustomCoder(custom: Coder): AithanaBuilder {
-        this.coder = CoderLogger(custom)
+        this.coder = custom
         return this
     }
 
     fun importFromCsv(fileName: String): AithanaBuilder {
         val reader = FileReader(fileName)
-        val concreteImporter = CsvImporter(reader)
-        this.importer = ImporterLogger(concreteImporter)
+        this.importer = CsvImporter(reader)
         return this
     }
 
     fun customImporter(custom: RawDataImporter): AithanaBuilder {
-        this.importer = ImporterLogger(custom)
+        this.importer = custom
         return this
     }
 
@@ -57,19 +73,33 @@ class AithanaBuilder {
 
     fun exportToCsv(writer: Writer): AithanaBuilder {
         val concreteExporter = CsvExporter(writer)
-        this.exporter = ExporterLogger(concreteExporter)
+        this.exporter = concreteExporter
         return this
     }
 
     fun customExporter(custom: CodedTableExporter): AithanaBuilder {
-        this.exporter = ExporterLogger(custom)
+        this.exporter = custom
         return this
     }
 
     fun build(): Aithana {
         ensureAllPropsInitialized()
 
-        return AithanaImpl(coder, importer, exporter)
+        var finalCoder = this.coder
+        var finalImporter = this.importer
+        var finalExporter = this.exporter
+
+        if (this.isRateLimited()) {
+            finalCoder = RateLimiter(finalCoder, this.permitsPerSecond)
+        }
+
+        if (this.enableLogging) {
+            finalCoder = CoderLogger(finalCoder)
+            finalImporter = ImporterLogger(finalImporter)
+            finalExporter = ExporterLogger(finalExporter)
+        }
+
+        return AithanaImpl(finalCoder, finalImporter, finalExporter)
     }
 
     private fun ensureAllPropsInitialized() {
@@ -88,4 +118,6 @@ class AithanaBuilder {
             throw AithanaBuilderException(interfaceName)
         }
     }
+
+    private fun isRateLimited(): Boolean = this.permitsPerSecond > 0
 }

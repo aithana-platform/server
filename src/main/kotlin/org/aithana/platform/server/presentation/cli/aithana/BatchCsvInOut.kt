@@ -12,6 +12,8 @@ class BatchCsvInOut: CliktCommand() {
     override fun run() {
         AithanaBuilder()
             .openEncodeUsingGemini()
+            .limitEncodingRateTo(1/5.0)
+            .enableLogging()
             .importFromCsv(input)
             .exportToCsv(output)
             .build()
