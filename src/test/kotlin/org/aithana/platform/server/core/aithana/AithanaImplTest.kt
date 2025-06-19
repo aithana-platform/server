@@ -14,7 +14,7 @@ import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class AithanaTest {
+class AithanaImplTest {
     @MockK
     private lateinit var mockCoder: Coder
     @MockK
@@ -27,6 +27,7 @@ class AithanaTest {
     @BeforeTest
     fun setup() {
         MockKAnnotations.init(this)
+
         underTest = AithanaImpl(mockCoder, mockImporter, mockExporter)
     }
 
