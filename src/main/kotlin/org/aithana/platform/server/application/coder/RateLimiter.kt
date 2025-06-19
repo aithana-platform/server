@@ -12,10 +12,10 @@ class RateLimiter(
 ): Coder {
     private val rateLimiter = RateLimiter.create(permitsPerSecond)
 
-    override fun code(section: String, quote: String): Set<String> {
+    override fun code(section: String, quote: String, projectContext: String): Set<String> {
         logger.debug { "acquiring permit..." }
         rateLimiter.acquire()
         logger.debug { "permit acquired!" }
-        return wrapped.code(section, quote)
+        return wrapped.code(section, quote, projectContext)
     }
 }

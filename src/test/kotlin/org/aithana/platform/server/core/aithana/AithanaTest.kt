@@ -44,7 +44,7 @@ class AithanaTest {
         // given
         val table = Table()
         table.append("foo-bar-baz", "a simple quote")
-        every { mockCoder.code(any(), any()) } returns setOf("code")
+        every { mockCoder.code(any(), any(), any()) } returns setOf("code")
 
         // when
         val result = underTest.openCode(table)
@@ -60,7 +60,7 @@ class AithanaTest {
         val complexQuote = "a quote that favors this at the expenses of that"
         val table = Table()
         table.append("foo-bar-baz", complexQuote)
-        every { mockCoder.code(any(), complexQuote) } returns setOf("favors this", "costs that")
+        every { mockCoder.code(any(), complexQuote, any()) } returns setOf("favors this", "costs that")
 
         // when
         val result = underTest.openCode(table)

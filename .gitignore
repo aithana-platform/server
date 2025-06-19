@@ -1,5 +1,4 @@
-data/input/
-data/output/
+data/
 logs/
 
 .gradle

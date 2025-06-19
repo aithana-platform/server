@@ -14,16 +14,15 @@ class OpenCoder(
     companion object {
         private const val MODEL_VERSION = "gemini-2.0-flash"
         private const val PROMPT_TEMPLATE_FILENAME = "open_coding_prompt.txt"
-        private const val RESEARCH_CONTEXT_FILENAME = "ramesses_context.txt"
     }
 
     private val client: Client = Client()
     private val textHelper = TextHelper()
 
-    override fun code(section: String, quote: String): Set<String> {
+    override fun code(section: String, quote: String, projectContext: String): Set<String> {
         val content = this.client.models.generateContent(
             MODEL_VERSION,
-            this.buildPrompt(section, quote),
+            this.buildPrompt(section, quote, projectContext),
             this.jsonConfig()
         )
 
@@ -48,9 +47,9 @@ class OpenCoder(
             .build()
     }
 
-    private fun buildPrompt(section: String, quote: String): String {
+    private fun buildPrompt(section: String, quote: String, projectContext: String): String {
         val template = this.resourcesLoader.loadFile(PROMPT_TEMPLATE_FILENAME)
-        val researchContext = this.resourcesLoader.loadFile(RESEARCH_CONTEXT_FILENAME)
+        val researchContext = projectContext
 
         val variables = mapOf(
             "%CONCRETE_RESEARCH_CONTEXT%" to researchContext,

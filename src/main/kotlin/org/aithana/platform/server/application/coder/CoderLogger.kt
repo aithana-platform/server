@@ -9,8 +9,8 @@ class CoderLogger(
     private val wrapped: Coder
 ): Coder {
 
-    override fun code(section: String, quote: String): Set<String> {
-        val codes = wrapped.code(section, quote)
+    override fun code(section: String, quote: String, projectContext: String): Set<String> {
+        val codes = wrapped.code(section, quote, projectContext)
 
         logger.info {
             val joinedCodes = codes.joinToString(", ")

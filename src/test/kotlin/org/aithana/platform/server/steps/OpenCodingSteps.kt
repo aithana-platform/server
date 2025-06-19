@@ -60,9 +60,9 @@ class OpenCodingSteps {
     @When("I ask to open code my table")
     fun runForTable() {
         MockKAnnotations.init(this)
-        every { mockCoder.code(any(), SIMPLEST_QUOTE) } returns setOf("simplest")
-        every { mockCoder.code(any(), SIMPLE_QUOTE) } returns setOf("simple")
-        every { mockCoder.code(any(), COMPLEX_QUOTE) } returns setOf("one code", "another code")
+        every { mockCoder.code(any(), SIMPLEST_QUOTE, any()) } returns setOf("simplest")
+        every { mockCoder.code(any(), SIMPLE_QUOTE, any()) } returns setOf("simple")
+        every { mockCoder.code(any(), COMPLEX_QUOTE, any()) } returns setOf("one code", "another code")
         val aithana = AithanaImpl(mockCoder, mockImporter, mockExporter)
         this.codedTable = aithana.openCode(this.table)
     }

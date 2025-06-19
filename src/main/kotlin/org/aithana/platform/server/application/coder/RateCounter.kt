@@ -14,7 +14,7 @@ class RateCounter: Coder {
 
     private val callRecords: MutableList<Long> = mutableListOf()
 
-    override fun code(section: String, quote: String): Set<String> {
+    override fun code(section: String, quote: String, projectContext: String): Set<String> {
         registerCall()
         return randomCodes()
     }

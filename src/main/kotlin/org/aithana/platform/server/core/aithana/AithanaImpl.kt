@@ -1,5 +1,6 @@
 package org.aithana.platform.server.core.aithana
 
+import org.aithana.platform.server.core.coder.BaseResourcesLoader
 import org.aithana.platform.server.core.coder.Coder
 import org.aithana.platform.server.core.impoexpo.CodedTableExporter
 import org.aithana.platform.server.core.impoexpo.RawDataImporter
@@ -12,6 +13,12 @@ class AithanaImpl(
     private val importer: RawDataImporter,
     private val exporter: CodedTableExporter
 ) : Aithana {
+    companion object {
+        private const val CONTEXT_FILENAME = "ramesses_context.txt"
+    }
+
+    private var ramessesContext: String = BaseResourcesLoader().loadFile(CONTEXT_FILENAME)
+
     fun openCode(table: QuotesTable): CodedQuotesTable {
         if (table.isEmpty())
             throw EmptyTableException()
@@ -20,7 +27,7 @@ class AithanaImpl(
 
         table.forEachRow { artifactId, quote, section ->
             this.coder
-                .code(section = section ?: "", quote)
+                .code(section = section ?: "", quote, ramessesContext)
                 .forEach { code ->
                     codedTable.append(code, artifactId, quote, section)
                 }
