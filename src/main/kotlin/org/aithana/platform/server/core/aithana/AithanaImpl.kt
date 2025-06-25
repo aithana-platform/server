@@ -2,6 +2,7 @@ package org.aithana.platform.server.core.aithana
 
 import org.aithana.platform.server.core.coder.Coder
 import org.aithana.platform.server.core.impoexpo.CodedTableExporter
+import org.aithana.platform.server.core.impoexpo.ProjectContextReader
 import org.aithana.platform.server.core.impoexpo.RawDataImporter
 import org.aithana.platform.server.core.model.CodedQuotesTable
 import org.aithana.platform.server.core.model.QuotesTable
@@ -10,12 +11,9 @@ import org.aithana.platform.server.core.model.Table
 class AithanaImpl(
     private val coder: Coder,
     private val importer: RawDataImporter,
-    private val exporter: CodedTableExporter
+    private val exporter: CodedTableExporter,
+    private val contextReader: ProjectContextReader? = null
 ) : Aithana {
-    companion object {
-        private const val DEFAULT_CONTEXT = "no specific project context"
-    }
-
     fun openCode(table: QuotesTable, projectContext: String = ""): CodedQuotesTable {
         if (table.isEmpty())
             throw EmptyTableException()
@@ -33,13 +31,20 @@ class AithanaImpl(
         return codedTable
     }
 
-    override fun process() = process(DEFAULT_CONTEXT)
-    override fun process(projectContext: String) {
-        if (projectContext.isBlank())
-            throw EmptyContextException()
+    override fun process() {
+        val projectContext = this.getSafeContext()
 
         val quotesTable = importer.import()
         val codedTable = this.openCode(quotesTable, projectContext)
         exporter.export(codedTable)
+    }
+
+    private fun getSafeContext(): String {
+        val context = this.contextReader?.read() ?: ""
+
+        if (context.isBlank())
+            throw EmptyContextException()
+
+        return context
     }
 }
