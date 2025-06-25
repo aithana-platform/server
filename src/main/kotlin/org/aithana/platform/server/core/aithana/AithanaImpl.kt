@@ -1,6 +1,5 @@
 package org.aithana.platform.server.core.aithana
 
-import org.aithana.platform.server.core.coder.BaseResourcesLoader
 import org.aithana.platform.server.core.coder.Coder
 import org.aithana.platform.server.core.impoexpo.CodedTableExporter
 import org.aithana.platform.server.core.impoexpo.RawDataImporter
@@ -14,12 +13,10 @@ class AithanaImpl(
     private val exporter: CodedTableExporter
 ) : Aithana {
     companion object {
-        private const val CONTEXT_FILENAME = "ramesses_context.txt"
+        private const val DEFAULT_CONTEXT = "no specific project context"
     }
 
-    private var ramessesContext: String = BaseResourcesLoader().loadFile(CONTEXT_FILENAME)
-
-    fun openCode(table: QuotesTable): CodedQuotesTable {
+    fun openCode(table: QuotesTable, projectContext: String = ""): CodedQuotesTable {
         if (table.isEmpty())
             throw EmptyTableException()
 
@@ -27,7 +24,7 @@ class AithanaImpl(
 
         table.forEachRow { artifactId, quote, section ->
             this.coder
-                .code(section = section ?: "", quote, ramessesContext)
+                .code(section = section ?: "", quote, projectContext)
                 .forEach { code ->
                     codedTable.append(code, artifactId, quote, section)
                 }
@@ -36,9 +33,13 @@ class AithanaImpl(
         return codedTable
     }
 
-    override fun process() {
+    override fun process() = process(DEFAULT_CONTEXT)
+    override fun process(projectContext: String) {
+        if (projectContext.isBlank())
+            throw EmptyContextException()
+
         val quotesTable = importer.import()
-        val codedTable = this.openCode(quotesTable)
+        val codedTable = this.openCode(quotesTable, projectContext)
         exporter.export(codedTable)
     }
 }

@@ -8,6 +8,7 @@ import org.aithana.platform.server.core.impoexpo.CodedTableExporter
 import org.aithana.platform.server.core.impoexpo.RawDataImporter
 import org.aithana.platform.server.core.model.QuotesTable
 import org.aithana.platform.server.core.model.Table
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -29,6 +30,33 @@ class AithanaImplTest {
         MockKAnnotations.init(this)
 
         underTest = AithanaImpl(mockCoder, mockImporter, mockExporter)
+    }
+
+    @Test
+    fun `it throws when project context is empty`() {
+        // given
+        val emptyContext = ""
+
+        // when ... then
+        assertThrows<EmptyContextException> {
+            underTest.process(emptyContext)
+        }
+    }
+
+    @Test
+    fun `it doesn't throw when project context is not empty`() {
+        // given
+        val notEmptyContext = "foo bar baz"
+        val table = Table()
+        table.append("foo-bar-baz", "a simple quote")
+        every { mockImporter.import() } returns table
+        every { mockCoder.code(any(), any(), notEmptyContext) } returns setOf("foo", "bar")
+        every { mockExporter.export(any()) } returns Unit
+
+        // when ... then
+        assertDoesNotThrow {
+            underTest.process(notEmptyContext)
+        }
     }
 
     @Test
