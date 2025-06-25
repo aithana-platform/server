@@ -6,12 +6,10 @@ import org.aithana.platform.server.application.coder.RateLimiter
 import org.aithana.platform.server.core.aithana.Aithana
 import org.aithana.platform.server.core.aithana.AithanaImpl
 import org.aithana.platform.server.core.coder.*
-import org.aithana.platform.server.core.impoexpo.CodedTableExporter
-import org.aithana.platform.server.core.impoexpo.ExporterLogger
-import org.aithana.platform.server.core.impoexpo.ImporterLogger
-import org.aithana.platform.server.core.impoexpo.RawDataImporter
 import org.aithana.platform.server.application.impoexpo.CsvExporter
 import org.aithana.platform.server.application.impoexpo.CsvImporter
+import org.aithana.platform.server.application.impoexpo.TxtContextReader
+import org.aithana.platform.server.core.impoexpo.*
 import java.io.FileReader
 import java.io.FileWriter
 import java.io.Writer
@@ -24,37 +22,16 @@ class AithanaBuilder {
 
     private lateinit var exporter: CodedTableExporter
     private lateinit var importer: RawDataImporter
+    private lateinit var contextReader: ProjectContextReader
     private lateinit var coder: Coder
 
     private var permitsPerSecond: Double = DEFAULT_RATE_LIMIT
     private var enableLogging: Boolean = ENABLED_BY_DEFAULT
 
-    fun limitEncodingRateTo(permitsPerSecond: Double?): AithanaBuilder {
-        this.permitsPerSecond = permitsPerSecond ?: DEFAULT_RATE_LIMIT
 
-        return this
-    }
 
-    fun enableLogging() = setLogging(true)
-    fun disableLogging() = setLogging(false)
-
-    fun setLogging(enableLogging: Boolean): AithanaBuilder {
-        this.enableLogging = enableLogging
-        return this
-    }
-
-    fun openEncodeUsingGemini(): AithanaBuilder {
-        val resourcesLoader = BaseResourcesLoader()
-        this.coder = OpenCoder(resourcesLoader)
-
-        return this
-    }
-
-    fun encodeUsingCustomCoder(custom: Coder): AithanaBuilder {
-        this.coder = custom
-        return this
-    }
-
+    // INPUT AND OUTPUT
+    //      // IMPORT
     fun importFromCsv(fileName: String): AithanaBuilder {
         val reader = FileReader(fileName)
         this.importer = CsvImporter(reader)
@@ -66,6 +43,7 @@ class AithanaBuilder {
         return this
     }
 
+    //      // EXPORT
     fun exportToCsv(fileName: String): AithanaBuilder {
         val writer = FileWriter(fileName)
         return this.exportToCsv(writer)
@@ -81,6 +59,51 @@ class AithanaBuilder {
         this.exporter = custom
         return this
     }
+
+
+    //      // CONTEXT
+    fun setProjectContextFile(fileName: String): AithanaBuilder {
+        val fileReader = FileReader(fileName)
+        this.contextReader = TxtContextReader(fileReader)
+        return this
+    }
+    // [END] INPUT AND OUTPUT
+
+
+
+    // ENCODING
+    fun openEncodeUsingGemini(): AithanaBuilder {
+        val resourcesLoader = BaseResourcesLoader()
+        this.coder = OpenCoder(resourcesLoader)
+
+        return this
+    }
+
+    fun encodeUsingCustomCoder(custom: Coder): AithanaBuilder {
+        this.coder = custom
+        return this
+    }
+    // [END] ENCODING
+
+
+
+    // CONFIG
+    fun limitEncodingRateTo(permitsPerSecond: Double?): AithanaBuilder {
+        this.permitsPerSecond = permitsPerSecond ?: DEFAULT_RATE_LIMIT
+
+        return this
+    }
+
+    fun enableLogging() = setLogging(true)
+    fun disableLogging() = setLogging(false)
+
+    fun setLogging(enableLogging: Boolean): AithanaBuilder {
+        this.enableLogging = enableLogging
+        return this
+    }
+    // [END] CONFIG
+
+
 
     fun build(): Aithana {
         ensureAllPropsInitialized()
@@ -99,7 +122,12 @@ class AithanaBuilder {
             finalExporter = ExporterLogger(finalExporter)
         }
 
-        return AithanaImpl(finalCoder, finalImporter, finalExporter)
+        return AithanaImpl(
+            coder = finalCoder,
+            importer = finalImporter,
+            exporter = finalExporter,
+            contextReader = contextReader
+        )
     }
 
     private fun ensureAllPropsInitialized() {
@@ -111,6 +139,10 @@ class AithanaBuilder {
         if (!this::importer.isInitialized) {
             val interfaceName = RawDataImporter::class.simpleName.toString()
             throw AithanaBuilderException(interfaceName)
+        }
+
+        if (!this::contextReader.isInitialized) {
+            throw AithanaBuilderException("Context Descriptor File name")
         }
 
         if (!this::coder.isInitialized) {

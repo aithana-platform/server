@@ -8,12 +8,14 @@ import org.aithana.platform.server.application.AithanaBuilder
 class BatchCsvInOut: CliktCommand() {
     private val input by option(help = "path to input file").required()
     private val output by option(help = "path to output file").required()
+    private val context by option(help = "path to project context file").required()
 
     override fun run() {
         AithanaBuilder()
             .openEncodeUsingGemini()
             .limitEncodingRateTo(1/5.0)
             .enableLogging()
+            .setProjectContextFile(context)
             .importFromCsv(input)
             .exportToCsv(output)
             .build()

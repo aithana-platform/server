@@ -9,6 +9,7 @@ import io.mockk.impl.annotations.MockK
 import org.aithana.platform.server.core.aithana.AithanaImpl
 import org.aithana.platform.server.core.coder.Coder
 import org.aithana.platform.server.core.impoexpo.CodedTableExporter
+import org.aithana.platform.server.core.impoexpo.ProjectContextReader
 import org.aithana.platform.server.core.impoexpo.RawDataImporter
 import org.aithana.platform.server.core.model.CodedQuotesTable
 import org.aithana.platform.server.core.model.QuotesTable
@@ -22,6 +23,8 @@ class OpenCodingSteps {
     private lateinit var mockImporter: RawDataImporter
     @MockK
     private lateinit var mockExporter: CodedTableExporter
+    @MockK
+    private lateinit var mockContextReader: ProjectContextReader
     private lateinit var table: QuotesTable
     private lateinit var codedTable: CodedQuotesTable
 
@@ -63,7 +66,7 @@ class OpenCodingSteps {
         every { mockCoder.code(any(), SIMPLEST_QUOTE, any()) } returns setOf("simplest")
         every { mockCoder.code(any(), SIMPLE_QUOTE, any()) } returns setOf("simple")
         every { mockCoder.code(any(), COMPLEX_QUOTE, any()) } returns setOf("one code", "another code")
-        val aithana = AithanaImpl(mockCoder, mockImporter, mockExporter)
+        val aithana = AithanaImpl(mockCoder, mockImporter, mockExporter, mockContextReader)
         this.codedTable = aithana.openCode(this.table)
     }
 

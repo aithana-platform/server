@@ -12,7 +12,7 @@ class AithanaImpl(
     private val coder: Coder,
     private val importer: RawDataImporter,
     private val exporter: CodedTableExporter,
-    private val contextReader: ProjectContextReader? = null
+    private val contextReader: ProjectContextReader
 ) : Aithana {
     fun openCode(table: QuotesTable, projectContext: String = ""): CodedQuotesTable {
         if (table.isEmpty())
@@ -40,7 +40,7 @@ class AithanaImpl(
     }
 
     private fun getSafeContext(): String {
-        val context = this.contextReader?.read() ?: ""
+        val context = this.contextReader.read()
 
         if (context.isBlank())
             throw EmptyContextException()

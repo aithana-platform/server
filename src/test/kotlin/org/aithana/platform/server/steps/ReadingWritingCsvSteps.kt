@@ -17,6 +17,7 @@ class ReadingWritingCsvSteps {
     @Given("the {string} file with artifact ids, the sections of the artifact, and the text quotes")
     fun setupBuilder(filename: String) {
         this.builder
+            .setProjectContextFile("./src/test/resources/mockData/project.txt")
             .importFromCsv(filename)
             .exportToCsv(writer)
             .openEncodeUsingGemini()

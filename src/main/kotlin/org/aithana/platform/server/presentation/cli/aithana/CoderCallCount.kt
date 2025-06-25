@@ -9,6 +9,7 @@ import org.aithana.platform.server.application.coder.RateCounter
 class CoderCallCount: CliktCommand() {
     private val input by option(help = "path to input file").required()
     private val output by option(help = "path to output file").required()
+    private val context by option(help = "path to project context file").required()
 
     override fun run() {
         val counter = RateCounter()
@@ -17,6 +18,7 @@ class CoderCallCount: CliktCommand() {
             .encodeUsingCustomCoder(counter)
             .disableLogging()
             .limitEncodingRateTo(3/2.0)
+            .setProjectContextFile(context)
             .importFromCsv(input)
             .exportToCsv(output)
             .build()
