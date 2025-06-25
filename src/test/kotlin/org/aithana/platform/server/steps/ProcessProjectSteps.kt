@@ -1,80 +1,99 @@
 package org.aithana.platform.server.steps
 
+import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.testing.test
 import io.cucumber.java.Before
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
-import io.mockk.*
-import org.aithana.platform.server.application.AithanaBuilder
 import org.aithana.platform.server.application.impoexpo.Csv
+import org.aithana.platform.server.presentation.cli.aithana.BatchCsvInOut
+import java.io.FileReader
 import java.io.FileWriter
-import java.io.Writer
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
 class ProcessProjectSteps {
+    companion object {
+        private const val OUTPUT_FILE_NAME = "./src/test/resources/mockData/output/mock.csv"
+    }
 
-    private val builder = AithanaBuilder()
-    private val mockWriter: Writer = mockk<FileWriter>(relaxed = true)
-
-    private lateinit var thrownException: Exception
-    private lateinit var writeSlot: CapturingSlot<String>
+    private lateinit var command: CliktCommand
+    private var inputArg: String? = null
+    private val outputReader = FileReader(OUTPUT_FILE_NAME)
+    private var outputArg: String? = null
+    private var contextArg: String? = null
+    private var errorCode: Int = 0
 
     @Before
-    fun setupMock() {
-        writeSlot = slot<String>()
-        every { mockWriter.write(capture(writeSlot)) } returns Unit
+    fun setup() {
+        this.command = BatchCsvInOut()
+        clearOutputFile()
     }
 
-    @Given("the {string} CSV file")
+    @Given("--input={string}")
     fun basicSetup(fileName: String) {
-        this.builder
-            .openEncodeUsingGemini()
-            .importFromCsv(fileName)
-            .exportToCsv(mockWriter)
+        inputArg = fileName
     }
 
-    @Given("the {string} project context file")
+    @Given("an output")
+    fun mockExport() {
+        outputArg = OUTPUT_FILE_NAME
+    }
+
+    @Given("--context={string}")
     fun setupProjectContextFile(fileName: String) {
-        this.builder
-            .setProjectContextFile(fileName)
+        contextArg = fileName
     }
 
     @When("I ask to process")
-    fun runCatchingAllExceptions() {
-        try {
-            this.builder
-                .build()
-                .process()
-        } catch (e: Exception) {
-            this.thrownException = e
-        }
+    fun runCatchingErrors() {
+        val cliArgs = mutableMapOf<String, String>()
+
+        if (inputArg != null)
+            cliArgs["input"] = inputArg!!
+
+        if (outputArg != null)
+            cliArgs["output"] = outputArg!!
+
+        if (contextArg != null)
+            cliArgs["context"] = contextArg!!
+
+        val result = this.command.test(
+            argv = cliArgs
+                .map { (k, v) -> "--$k $v" }
+                .joinToString(" ")
+        )
+
+        errorCode = result.statusCode
+        println(result)
     }
 
     @Then("I get no errors")
     fun thrownExceptionNotInitialized() {
-        assertFalse { this::thrownException.isInitialized }
+        assertEquals(0, errorCode)
     }
 
-    @Then("I get {string} error")
-    fun thrownExceptionMatchesGiven(exceptionName: String) {
-        assertTrue { this::thrownException.isInitialized }
-        assertEquals(exceptionName, this.thrownException::class.simpleName)
+    @Then("I get an error")
+    fun errorCodeIsntZero() {
+        assertNotEquals(0, errorCode)
     }
 
     @Then("no results are written")
-    fun mockWriterNotCalled() {
-        assertFalse { writeSlot.isCaptured }
+    fun outputFileEmpty() {
+        val outputFileContent = outputReader.readText()
+
+        assertTrue { outputFileContent.isEmpty() }
     }
 
     @Then("I get the results in a file")
     fun verifyWellFormedCsvOutput() {
-        assertTrue { writeSlot.isCaptured }
+        val outputFileContent = outputReader.readText()
+        assertFalse { outputFileContent.isEmpty() }
 
-        val csvContent = writeSlot.captured
-
-        val sheet = csvContent
+        val sheet = outputFileContent
             .split("\n")
             .filter { row -> row.isNotEmpty() }
             .map { row -> row.split(Csv.SEPARATOR).map { cell -> cell.trim() } }
@@ -84,5 +103,12 @@ class ProcessProjectSteps {
 
         assertTrue { allLinesCorrectLength }
         assertTrue { noEmptyCells }
+    }
+
+    private fun clearOutputFile() {
+        val writer = FileWriter(OUTPUT_FILE_NAME)
+        writer.write("")
+        writer.flush()
+        writer.close()
     }
 }
