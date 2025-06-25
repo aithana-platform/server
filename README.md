@@ -6,7 +6,7 @@ This is the server for the Aithana Platform.
 
 ## Running from Docker
 
-Aithana server can be run directly from the Docker image: `aithana-platform/server:0.1`.
+Aithana server can be run directly from the Docker image: `jooaodanieel/aithana-server:0.1`.
 
 To run:
 
@@ -14,7 +14,7 @@ To run:
 docker run --rm -it                         \
     -e GOOGLE_API_KEY=<your Google API Key> \
     -v /path/to/your/data:/data             \
-    aithana-platform/server:0.1             \
+    aithana-server:0.1                      \
     batch-csv-in-out                        \
     --input /data/input/demo.csv            \
     --output /data/output/demo.csv          \
