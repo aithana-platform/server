@@ -43,6 +43,17 @@ jobs:
           echo "Extracted tag name: $TAG_NAME"
           echo "tag=$TAG_NAME" >> $GITHUB_OUTPUT
 
+      - name: Find and Rename JAR
+        run: |
+          ORIGINAL_JAR=$(find build/libs -name '*-all.jar' -print -quit)
+          if [ -z "$ORIGINAL_JAR" ]; then
+            echo "Error: No -all.jar file found in build/libs."
+            exit 1
+          fi
+          NEW_JAR_NAME="aithana_server.jar"
+          mv "$ORIGINAL_JAR" "build/libs/$NEW_JAR_NAME"
+          echo "Renamed '$ORIGINAL_JAR' to '$NEW_JAR_NAME'"
+
       - name: Create GitHub Release
         id: create_release
         uses: softprops/action-gh-release@v2
@@ -56,6 +67,6 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            build/libs/*-all.jar
+            build/libs/aithana_server.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
