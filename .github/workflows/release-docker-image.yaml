@@ -1,0 +1,53 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  DOCKER_HUB_REPO: jooaodanieel/aithana-server
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      actions: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Extract Git tag for Docker image tag
+        id: extract_tag
+        run: |
+          GIT_TAG_NAME="${{ github.ref_name }}"
+          DOCKER_IMAGE_VERSION="${GIT_TAG_NAME#v}"
+          echo "DOCKER_IMAGE_TAG=${DOCKER_IMAGE_VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ env.DOCKER_HUB_REPO }}:${{ steps.extract_tag.outputs.DOCKER_IMAGE_TAG }}
+            ${{ env.DOCKER_HUB_REPO }}:latest
+          platforms: linux/amd64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
