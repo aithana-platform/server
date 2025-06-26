@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [[ -z "$GOOGLE_API_KEY" ]]; then
+  echo ""
+  echo "ERROR: GOOGLE_API_KEY environment variable is not set."
+  echo "       Please set it before pushing. Example:"
+  echo "       export GOOGLE_API_KEY=\"YOUR_API_KEY_HERE\""
+  echo ""
+  exit 1
+fi
+
+./gradlew acceptanceTest
+
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "ERROR: Cucumber features failed! Push aborted."
+  echo ""
+  exit 1
+fi
+
+exit 0

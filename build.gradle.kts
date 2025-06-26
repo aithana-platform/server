@@ -75,6 +75,18 @@ tasks {
             }
         }
     }
+
+    register<Copy>("installGitHooks") {
+        from("$rootDir/scripts/git-hooks/") { // Assuming your hook scripts are in scripts/git-hooks
+            include("pre-commit", "pre-push")
+        }
+        into("$rootDir/.git/hooks")
+        fileMode = 0b0111101101 // rwxr-xr-x (executable permissions)
+    }
+
+    named<Task>("assemble").configure {
+        dependsOn("installGitHooks")
+    }
 }
 
 kotlin {
