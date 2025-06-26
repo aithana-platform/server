@@ -6,7 +6,7 @@ This is the server for the Aithana Platform.
 
 ## Downloading Release
 
-Aithana server is delivered using the [Aithana Server Releases][releases].
+Aithana server is delivered using GitHub Releases. Check out the [latest Aithana Server release][latest-release].
 
 ## Running from Docker
 
@@ -78,7 +78,7 @@ To contribute to the project, follow this project's [contributing guidelines][co
 ---
 
 [logo]: ./aithana-banner.png
-[releases]: https://github.com/aithana-platform/server/releases
+[latest-release]: https://github.com/aithana-platform/server/releases/latest
 [dockerfile]: ./Dockerfile
 [kotlinlang]: https://kotlinlang.org
 [gradle]: https://gradle.org
