@@ -1,5 +1,10 @@
 package org.aithana.platform.server.core.model
 
+@Deprecated(
+    message = "CodedQuotesTable is deprecated, use CodifiableQuotesCollection",
+    replaceWith = ReplaceWith("CodifiableQuotesCollection(...)"),
+    level = DeprecationLevel.WARNING
+)
 interface CodedQuotesTable: QuotesTable {
     fun codes(): Set<String>
 

@@ -2,6 +2,11 @@ package org.aithana.platform.server.core.model
 
 import org.aithana.platform.server.core.utils.TextHelper
 
+@Deprecated(
+    message = "Table is deprecated, use CodifiableQuotesCollection",
+    replaceWith = ReplaceWith("CodifiableQuotesCollection(...)"),
+    level = DeprecationLevel.WARNING
+)
 class Table(): CodedQuotesTable {
     private data class Row(
         val artifactId: String,
