@@ -1,35 +1,51 @@
 package org.aithana.platform.server.application.impoexpo
 
 import org.aithana.platform.server.core.model.CodedQuotesTable
-import org.aithana.platform.server.core.impoexpo.CodedTableExporter
+import org.aithana.platform.server.core.impoexpo.QuotesCollectionExporter
+import org.aithana.platform.server.core.model.CodifiableQuoteCollection
 import java.io.Writer
 
 class CsvExporter(
     private val writer: Writer
-): CodedTableExporter {
-    override fun export(table: CodedQuotesTable) {
+): QuotesCollectionExporter {
+
+
+    //
+    //
+    //
+    // TODO: move up the mapping
+    override fun export(table: CodedQuotesTable) =
+        export(CodifiableQuoteCollection.from(table))
+
+    fun export(codedCollection: CodifiableQuoteCollection) {
         val nCols = Csv.IndexMapper.entries.size
         val strBuilder = StringBuilder(Csv.OUTPUT_HEADERS.joinToString(Csv.SEPARATOR))
         strBuilder.append("\n")
 
-        val rowFormatter = this.createRowFormatter(strBuilder, nCols)
-        table.forEachCodedRow(rowFormatter)
+        val csvRowFormatter = this.createEntryFormatter(strBuilder, nCols)
+        codedCollection.eachEntry(csvRowFormatter)
 
-        this.writer.write(strBuilder.toString())
+        val content = strBuilder.toString()
+        this.writer.write(content)
         this.writer.flush()
     }
 
-    private fun createRowFormatter(strBuilder: java.lang.StringBuilder, nCols: Int): (String, String, String, String?) -> Unit {
-        return { artifactId: String, quote: String, code: String, section: String? ->
-            val list: MutableList<String> = MutableList(nCols) { "" }
+    private fun createEntryFormatter(strBuilder: java.lang.StringBuilder, nCols: Int): (CodifiableQuoteCollection.Entry) -> Unit {
+        return { entry ->
+            println("running for entry: $entry")
 
-            list[Csv.IndexMapper.ID.index] = artifactId
-            list[Csv.IndexMapper.SECTION.index] = section ?: ""
-            list[Csv.IndexMapper.QUOTE.index] = quote
-            list[Csv.IndexMapper.CODE.index] = code
+            entry.codes.forEach { code ->
+                println("running for code: $code")
+                val csvLineAsList: MutableList<String> = MutableList(nCols) { "" }
 
-            val newLine = list.joinToString(Csv.SEPARATOR) + "\n"
-            strBuilder.append(newLine)
+                csvLineAsList[Csv.IndexMapper.ID.index] = entry.artifactId
+                csvLineAsList[Csv.IndexMapper.SECTION.index] = entry.section
+                csvLineAsList[Csv.IndexMapper.QUOTE.index] = entry.quote
+                csvLineAsList[Csv.IndexMapper.CODE.index] = code
+
+                val newCsvLine = csvLineAsList.joinToString(Csv.SEPARATOR) + "\n"
+                strBuilder.append(newCsvLine)
+            }
         }
     }
 }

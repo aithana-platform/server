@@ -1,7 +1,7 @@
 package org.aithana.platform.server.core.aithana
 
 import org.aithana.platform.server.core.coder.Coder
-import org.aithana.platform.server.core.impoexpo.CodedTableExporter
+import org.aithana.platform.server.core.impoexpo.QuotesCollectionExporter
 import org.aithana.platform.server.core.impoexpo.ProjectContextReader
 import org.aithana.platform.server.core.impoexpo.RawDataImporter
 import org.aithana.platform.server.core.model.CodedQuotesTable
@@ -11,7 +11,7 @@ import org.aithana.platform.server.core.model.Table
 class AithanaImpl(
     private val coder: Coder,
     private val importer: RawDataImporter,
-    private val exporter: CodedTableExporter,
+    private val exporter: QuotesCollectionExporter,
     private val contextReader: ProjectContextReader
 ) : Aithana {
     fun openCode(table: QuotesTable, projectContext: String = ""): CodedQuotesTable {

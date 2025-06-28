@@ -4,7 +4,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import org.aithana.platform.server.core.coder.Coder
-import org.aithana.platform.server.core.impoexpo.CodedTableExporter
+import org.aithana.platform.server.core.impoexpo.QuotesCollectionExporter
 import org.aithana.platform.server.core.impoexpo.ProjectContextReader
 import org.aithana.platform.server.core.impoexpo.RawDataImporter
 import org.aithana.platform.server.core.model.QuotesTable
@@ -22,7 +22,7 @@ class AithanaImplTest {
     @MockK
     private lateinit var mockImporter: RawDataImporter
     @MockK
-    private lateinit var mockExporter: CodedTableExporter
+    private lateinit var mockExporter: QuotesCollectionExporter
     @MockK
     private lateinit var mockContextReader: ProjectContextReader
 

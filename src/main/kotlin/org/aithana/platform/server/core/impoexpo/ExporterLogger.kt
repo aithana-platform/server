@@ -6,8 +6,8 @@ import org.aithana.platform.server.core.model.CodedQuotesTable
 private val logger = KotlinLogging.logger {  }
 
 class ExporterLogger(
-    private val wrapped: CodedTableExporter
-): CodedTableExporter {
+    private val wrapped: QuotesCollectionExporter
+): QuotesCollectionExporter {
 
     override fun export(table: CodedQuotesTable) {
         logger.info {

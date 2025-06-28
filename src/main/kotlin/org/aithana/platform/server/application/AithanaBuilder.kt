@@ -20,7 +20,7 @@ class AithanaBuilder {
         private const val ENABLED_BY_DEFAULT: Boolean = true
     }
 
-    private lateinit var exporter: CodedTableExporter
+    private lateinit var exporter: QuotesCollectionExporter
     private lateinit var importer: RawDataImporter
     private lateinit var contextReader: ProjectContextReader
     private lateinit var coder: Coder
@@ -55,7 +55,7 @@ class AithanaBuilder {
         return this
     }
 
-    fun customExporter(custom: CodedTableExporter): AithanaBuilder {
+    fun customExporter(custom: QuotesCollectionExporter): AithanaBuilder {
         this.exporter = custom
         return this
     }
@@ -132,7 +132,7 @@ class AithanaBuilder {
 
     private fun ensureAllPropsInitialized() {
         if (!this::exporter.isInitialized) {
-            val interfaceName = CodedTableExporter::class.simpleName.toString()
+            val interfaceName = QuotesCollectionExporter::class.simpleName.toString()
             throw AithanaBuilderException(interfaceName)
         }
 
