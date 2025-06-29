@@ -8,6 +8,6 @@ data class MappingRecord(
     val quote: String,
 ) {}
 
-fun interface ColumnMapper {
+fun interface RowMapper {
     fun map(row: Row): MappingRecord
 }

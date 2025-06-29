@@ -1,8 +1,8 @@
-package org.aithana.platform.server.application.impoexpo.columnmapper
+package org.aithana.platform.server.application.impoexpo.mapper
 
 import org.aithana.platform.server.application.impoexpo.*
 
-class DefaultColumnMapper: ColumnMapper {
+class DefaultRowMapper: RowMapper {
     override fun map(row: Row) = MappingRecord(
         artifactId = row[Csv.IndexMapper.ID.index],
         section = row[Csv.IndexMapper.SECTION.index],

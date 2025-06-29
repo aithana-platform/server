@@ -1,13 +1,13 @@
 package org.aithana.platform.server.application.impoexpo
 
-import org.aithana.platform.server.application.impoexpo.columnmapper.DefaultColumnMapper
+import org.aithana.platform.server.application.impoexpo.mapper.DefaultRowMapper
 import org.aithana.platform.server.core.impoexpo.RawDataImporter
 import org.aithana.platform.server.core.model.CodifiableQuoteCollection
 import java.io.Reader
 
 class CsvImporter(
     private val reader: Reader,
-    private val mapper: ColumnMapper = DefaultColumnMapper()
+    private val mapper: RowMapper = DefaultRowMapper()
 ): RawDataImporter {
 
     override fun import(): CodifiableQuoteCollection {
