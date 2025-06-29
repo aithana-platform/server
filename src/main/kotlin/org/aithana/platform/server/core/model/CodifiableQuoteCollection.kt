@@ -1,40 +1,6 @@
 package org.aithana.platform.server.core.model
 
 class CodifiableQuoteCollection {
-    companion object {
-        fun from(quotesTable: QuotesTable): CodifiableQuoteCollection {
-            val collection = CodifiableQuoteCollection()
-
-            quotesTable.forEachRow { artifactId, quote, section ->
-                collection.append(artifactId, section ?: "", quote)
-            }
-
-            return collection
-        }
-
-        fun from(codedQuotesTable: CodedQuotesTable): CodifiableQuoteCollection {
-            var collection = CodifiableQuoteCollection()
-
-            val quoteToIndex = mutableMapOf<Triple<String,String,String>,Int>()
-
-            codedQuotesTable.forEachCodedRow { artifactId, quote, code, section ->
-
-                val safeSection = section ?: ""
-                val context = Triple(artifactId, safeSection, quote)
-
-                val index = quoteToIndex[context]
-                    ?: collection
-                        .append(artifactId, safeSection, quote)
-                        .also { quoteToIndex[context] = it }
-
-                collection = collection.addCodes(index, setOf(code))
-                println(collection.entries)
-            }
-
-            return collection
-        }
-    }
-
     data class Entry(
         val index: Int,
         val artifactId: String,
