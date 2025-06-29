@@ -1,11 +1,13 @@
 package org.aithana.platform.server.application.impoexpo
 
+import org.aithana.platform.server.application.impoexpo.columnmapper.DefaultColumnMapper
 import org.aithana.platform.server.core.impoexpo.RawDataImporter
 import org.aithana.platform.server.core.model.CodifiableQuoteCollection
 import java.io.Reader
 
 class CsvImporter(
-    private val reader: Reader
+    private val reader: Reader,
+    private val mapper: ColumnMapper = DefaultColumnMapper()
 ): RawDataImporter {
 
     override fun import(): CodifiableQuoteCollection {
@@ -19,11 +21,8 @@ class CsvImporter(
     }
 
     private fun append(row: List<String>, to: CodifiableQuoteCollection) {
-        to.append(
-            artifactId = row[Csv.IndexMapper.ID.index],
-            section = row[Csv.IndexMapper.SECTION.index],
-            quote = row[Csv.IndexMapper.QUOTE.index]
-        )
+        val (artifactId, section, quote) = mapper.map(row)
+        to.append(artifactId, section, quote)
     }
 
     private fun parseFileContent(content: String): CodifiableQuoteCollection {
