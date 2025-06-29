@@ -1,19 +1,20 @@
 package org.aithana.platform.server.application.impoexpo
 
+import org.aithana.platform.server.application.impoexpo.mapper.DefaultEntryMapper
 import org.aithana.platform.server.core.impoexpo.QuotesCollectionExporter
 import org.aithana.platform.server.core.model.CodifiableQuoteCollection
 import java.io.Writer
 
 class CsvExporter(
-    private val writer: Writer
+    private val writer: Writer,
+    private val mapper: EntryMapper = DefaultEntryMapper()
 ): QuotesCollectionExporter {
 
     override fun export(codedCollection: CodifiableQuoteCollection) {
-        val nCols = Csv.IndexMapper.entries.size
         val strBuilder = StringBuilder(Csv.OUTPUT_HEADERS.joinToString(Csv.SEPARATOR))
         strBuilder.append("\n")
 
-        val csvRowFormatter = this.createEntryFormatter(strBuilder, nCols)
+        val csvRowFormatter = this.createEntryFormatter(strBuilder)
         codedCollection.eachEntry(csvRowFormatter)
 
         val content = strBuilder.toString()
@@ -21,21 +22,12 @@ class CsvExporter(
         this.writer.flush()
     }
 
-    private fun createEntryFormatter(strBuilder: java.lang.StringBuilder, nCols: Int): (CodifiableQuoteCollection.Entry) -> Unit {
+    private fun createEntryFormatter(strBuilder: java.lang.StringBuilder): (CodifiableQuoteCollection.Entry) -> Unit {
         return { entry ->
-            println("running for entry: $entry")
-
-            entry.codes.forEach { code ->
-                println("running for code: $code")
-                val csvLineAsList: MutableList<String> = MutableList(nCols) { "" }
-
-                csvLineAsList[Csv.IndexMapper.ID.index] = entry.artifactId
-                csvLineAsList[Csv.IndexMapper.SECTION.index] = entry.section
-                csvLineAsList[Csv.IndexMapper.QUOTE.index] = entry.quote
-                csvLineAsList[Csv.IndexMapper.CODE.index] = code
-
-                val newCsvLine = csvLineAsList.joinToString(Csv.SEPARATOR) + "\n"
-                strBuilder.append(newCsvLine)
+            mapper.map(entry).forEach {
+                it.joinToString(Csv.SEPARATOR)
+                    .let { line -> "$line\n" }
+                    .also(strBuilder::append)
             }
         }
     }
