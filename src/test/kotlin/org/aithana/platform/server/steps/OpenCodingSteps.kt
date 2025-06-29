@@ -11,9 +11,7 @@ import org.aithana.platform.server.core.coder.Coder
 import org.aithana.platform.server.core.impoexpo.QuotesCollectionExporter
 import org.aithana.platform.server.core.impoexpo.ProjectContextReader
 import org.aithana.platform.server.core.impoexpo.RawDataImporter
-import org.aithana.platform.server.core.model.CodedQuotesTable
-import org.aithana.platform.server.core.model.QuotesTable
-import org.aithana.platform.server.core.model.Table
+import org.aithana.platform.server.core.model.CodifiableQuoteCollection
 import kotlin.test.assertTrue
 
 class OpenCodingSteps {
@@ -25,8 +23,8 @@ class OpenCodingSteps {
     private lateinit var mockExporter: QuotesCollectionExporter
     @MockK
     private lateinit var mockContextReader: ProjectContextReader
-    private lateinit var table: QuotesTable
-    private lateinit var codedTable: CodedQuotesTable
+    private lateinit var collection: CodifiableQuoteCollection
+    private lateinit var codedCollection: CodifiableQuoteCollection
 
     private val SIMPLEST_QUOTE: String = "The architecture is complex."
     private val SIMPLE_QUOTE: String = "I've already used a similar structure in a project I worked on, " +
@@ -34,17 +32,17 @@ class OpenCodingSteps {
     private val COMPLEX_QUOTE: String = "The complexity of the architecture challenges me, " +
             "and in response I end up being more careful and writing better code."
 
-    @Given("a table containing the artifact id, the section of the artifact, and the text quote")
+    @Given("a collection containing the artifact id, the section of the artifact, and the text quote")
     fun table() {
-        this.table = Table()
+        this.collection = CodifiableQuoteCollection()
 
-        table.append(
+        collection.append(
             artifactId = "foo-bar-baz",
             section = "chapter 1",
             quote = SIMPLEST_QUOTE
         )
 
-        table.append(
+        collection.append(
             artifactId = "foo-bar-baz",
             section = "chapter 1",
             quote = SIMPLE_QUOTE
@@ -53,7 +51,7 @@ class OpenCodingSteps {
 
     @Given("a single quote with enough content to be coded using more than code")
     fun addContentRichQuoteToTable() {
-        this.table.append(
+        this.collection.append(
             artifactId = "foo-bar-baz",
             section = "chapter 2",
             quote = COMPLEX_QUOTE
@@ -67,22 +65,19 @@ class OpenCodingSteps {
         every { mockCoder.code(any(), SIMPLE_QUOTE, any()) } returns setOf("simple")
         every { mockCoder.code(any(), COMPLEX_QUOTE, any()) } returns setOf("one code", "another code")
         val aithana = AithanaImpl(mockCoder, mockImporter, mockExporter, mockContextReader)
-        this.codedTable = aithana.openCode(this.table)
+        this.codedCollection = aithana.openCode(this.collection)
     }
 
     @Then("I get a copy of the table with a new column with the code for each quote")
     fun codesGetAddedToTable() {
-        val codes = this.codedTable.codes()
+        val codes = this.codedCollection.codedQuotes()
         assertTrue { codes.isNotEmpty() }
     }
 
     @Then("I get more than one line for the same quote, but with different codes")
     fun quoteReplicatedWithDifferentCodes() {
-        val quotes = this.codedTable.quotes()
-        val codes = this.codedTable.codes()
-
-        println(quotes)
-        println(codes)
+        val quotes = this.codedCollection.uniqueQuotes()
+        val codes = this.codedCollection.codedQuotes()
 
         assertTrue { quotes.isNotEmpty() }
         assertTrue { codes.isNotEmpty() }

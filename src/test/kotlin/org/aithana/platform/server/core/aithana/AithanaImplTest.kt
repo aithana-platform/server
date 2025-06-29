@@ -7,7 +7,7 @@ import org.aithana.platform.server.core.coder.Coder
 import org.aithana.platform.server.core.impoexpo.QuotesCollectionExporter
 import org.aithana.platform.server.core.impoexpo.ProjectContextReader
 import org.aithana.platform.server.core.impoexpo.RawDataImporter
-import org.aithana.platform.server.core.model.QuotesTable
+import org.aithana.platform.server.core.model.CodifiableQuoteCollection
 import org.aithana.platform.server.core.model.Table
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
@@ -71,42 +71,42 @@ class AithanaImplTest {
     }
 
     @Test
-    fun `it throws for an empty table`() {
+    fun `it throws for an empty collection`() {
         // given
-        val emptyTable: QuotesTable = Table()
+        val emptyCollection = CodifiableQuoteCollection()
 
         // when ... then
-        assertThrows<EmptyTableException> { underTest.openCode(emptyTable) }
+        assertThrows<EmptyCollectionException> { underTest.openCode(emptyCollection) }
     }
 
     @Test
     fun `it adds at least one code for each of the quotes`() {
         // given
-        val table = Table()
-        table.append("foo-bar-baz", "a simple quote")
+        val collection = CodifiableQuoteCollection()
+        collection.append(artifactId = "foo-bar-baz", quote = "a simple quote", section = "")
         every { mockCoder.code(any(), any(), any()) } returns setOf("code")
 
         // when
-        val result = underTest.openCode(table)
+        val result = underTest.openCode(collection)
 
         // then
         assertFalse { result.isEmpty() }
-        assertTrue { result.codes().size >= result.quotes().size }
+        assertTrue { result.codedQuotes().size >= result.uniqueQuotes().size }
     }
 
     @Test
     fun `it adds more than one code for a complex quote`() {
         // given
         val complexQuote = "a quote that favors this at the expenses of that"
-        val table = Table()
-        table.append("foo-bar-baz", complexQuote)
+        val collection = CodifiableQuoteCollection()
+        collection.append("foo-bar-baz", quote = complexQuote, section = "")
         every { mockCoder.code(any(), complexQuote, any()) } returns setOf("favors this", "costs that")
 
         // when
-        val result = underTest.openCode(table)
+        val result = underTest.openCode(collection)
 
         // then
         assertFalse { result.isEmpty() }
-        assertTrue { result.codes().size >= result.quotes().size }
+        assertTrue { result.codedQuotes().size >= result.uniqueQuotes().size }
     }
 }

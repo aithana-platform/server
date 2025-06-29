@@ -4,10 +4,7 @@ import org.aithana.platform.server.core.coder.Coder
 import org.aithana.platform.server.core.impoexpo.QuotesCollectionExporter
 import org.aithana.platform.server.core.impoexpo.ProjectContextReader
 import org.aithana.platform.server.core.impoexpo.RawDataImporter
-import org.aithana.platform.server.core.model.CodedQuotesTable
 import org.aithana.platform.server.core.model.CodifiableQuoteCollection
-import org.aithana.platform.server.core.model.QuotesTable
-import org.aithana.platform.server.core.model.Table
 
 class AithanaImpl(
     private val coder: Coder,
@@ -15,29 +12,22 @@ class AithanaImpl(
     private val exporter: QuotesCollectionExporter,
     private val contextReader: ProjectContextReader
 ) : Aithana {
-    fun openCode(table: QuotesTable, projectContext: String = ""): CodedQuotesTable {
-        if (table.isEmpty())
-            throw EmptyTableException()
 
-        val codedTable: CodedQuotesTable = Table()
+    fun openCode(collection: CodifiableQuoteCollection, projectContext: String = ""): CodifiableQuoteCollection {
+        if (collection.isEmpty())
+            throw EmptyCollectionException()
 
-        table.forEachRow { artifactId, quote, section ->
-            this.coder
-                .code(section = section ?: "", quote, projectContext)
-                .forEach { code ->
-                    codedTable.append(code, artifactId, quote, section)
-                }
+        return collection.encode { entry ->
+            this.coder.code(entry.section, entry.quote, projectContext)
         }
-
-        return codedTable
     }
 
     override fun process() {
         val projectContext = this.getSafeContext()
 
         val quotesTable = importer.import()
-        val codedTable = this.openCode(quotesTable, projectContext)
-        val codedCollection = CodifiableQuoteCollection.from(codedTable)
+        val rawCollection = CodifiableQuoteCollection.from(quotesTable)
+        val codedCollection = this.openCode(rawCollection, projectContext)
         exporter.export(codedCollection)
     }
 
