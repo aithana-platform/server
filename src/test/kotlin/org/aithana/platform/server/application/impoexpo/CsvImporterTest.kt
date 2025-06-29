@@ -40,7 +40,7 @@ class CsvImporterTest {
 
         // then
         assertFalse { imported.isEmpty() }
-        assertEquals(1, imported.quotes().size)
+        assertEquals(1, imported.uniqueQuotes().size)
     }
 
     @Test

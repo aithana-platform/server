@@ -25,8 +25,7 @@ class AithanaImpl(
     override fun process() {
         val projectContext = this.getSafeContext()
 
-        val quotesTable = importer.import()
-        val rawCollection = CodifiableQuoteCollection.from(quotesTable)
+        val rawCollection = importer.import()
         val codedCollection = this.openCode(rawCollection, projectContext)
         exporter.export(codedCollection)
     }

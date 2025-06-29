@@ -8,7 +8,6 @@ import org.aithana.platform.server.core.impoexpo.QuotesCollectionExporter
 import org.aithana.platform.server.core.impoexpo.ProjectContextReader
 import org.aithana.platform.server.core.impoexpo.RawDataImporter
 import org.aithana.platform.server.core.model.CodifiableQuoteCollection
-import org.aithana.platform.server.core.model.Table
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.BeforeTest
@@ -57,10 +56,10 @@ class AithanaImplTest {
         // given
         val notEmptyContext = "foo bar baz"
         every { mockContextReader.read() } returns notEmptyContext
-        val table = Table().also {
-            it.append("foo-bar-baz", "a simple quote")
+        val collection = CodifiableQuoteCollection().also {
+            it.append(artifactId = "foo-bar-baz", quote = "a simple quote", section = "")
         }
-        every { mockImporter.import() } returns table
+        every { mockImporter.import() } returns collection
         every { mockCoder.code(any(), any(), notEmptyContext) } returns setOf("foo", "bar")
         every { mockExporter.export(any()) } returns Unit
 
