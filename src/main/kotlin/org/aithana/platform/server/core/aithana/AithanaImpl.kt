@@ -5,6 +5,7 @@ import org.aithana.platform.server.core.impoexpo.QuotesCollectionExporter
 import org.aithana.platform.server.core.impoexpo.ProjectContextReader
 import org.aithana.platform.server.core.impoexpo.RawDataImporter
 import org.aithana.platform.server.core.model.CodedQuotesTable
+import org.aithana.platform.server.core.model.CodifiableQuoteCollection
 import org.aithana.platform.server.core.model.QuotesTable
 import org.aithana.platform.server.core.model.Table
 
@@ -36,7 +37,8 @@ class AithanaImpl(
 
         val quotesTable = importer.import()
         val codedTable = this.openCode(quotesTable, projectContext)
-        exporter.export(codedTable)
+        val codedCollection = CodifiableQuoteCollection.from(codedTable)
+        exporter.export(codedCollection)
     }
 
     private fun getSafeContext(): String {

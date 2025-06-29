@@ -1,7 +1,7 @@
 package org.aithana.platform.server.core.impoexpo
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import org.aithana.platform.server.core.model.CodedQuotesTable
+import org.aithana.platform.server.core.model.CodifiableQuoteCollection
 
 private val logger = KotlinLogging.logger {  }
 
@@ -9,11 +9,11 @@ class ExporterLogger(
     private val wrapped: QuotesCollectionExporter
 ): QuotesCollectionExporter {
 
-    override fun export(table: CodedQuotesTable) {
+    override fun export(codedCollection: CodifiableQuoteCollection) {
         logger.info {
             "exporting:\n" +
-            "$table"
+            "$codedCollection"
         }
-        wrapped.export(table)
+        wrapped.export(codedCollection)
     }
 }

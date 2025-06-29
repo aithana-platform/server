@@ -4,7 +4,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify
-import org.aithana.platform.server.core.model.Table
+import org.aithana.platform.server.core.model.CodifiableQuoteCollection
 import java.io.Writer
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -28,12 +28,12 @@ class CsvExporterTest {
     }
 
     @Test
-    fun `exporting an empty table should result in an emtpy Csv`() {
+    fun `exporting an empty collection should result in an emtpy Csv`() {
         // given
-        val emptyTable = Table()
+        val emptyCollection = CodifiableQuoteCollection()
 
         // when
-        underTest.export(emptyTable)
+        underTest.export(emptyCollection)
 
         // then
         val expectedHeadersOnly = "$EXPECTED_HEADERS\n"
@@ -41,20 +41,20 @@ class CsvExporterTest {
     }
 
     @Test
-    fun `exporting a table with a single row should result in a Csv with a single line below the headers`() {
+    fun `exporting a collection with a single entry and a single code should result in a Csv with a single line below the headers`() {
         // given
-        val table = Table()
+        var collection = CodifiableQuoteCollection()
         val artifactId = "foo"
         val section = "one"
         val quote = "foo bar baz"
         val code = "nonsense"
 
-        table.append(
-            artifactId = artifactId, section = section, quote = quote, code = code
-        )
+        collection = collection
+            .append(artifactId = artifactId, section = section, quote = quote)
+            .let { collection.encode(it) { setOf(code) } }
 
         // when
-        underTest.export(table)
+        underTest.export(collection)
 
         // then
         val expected = "$EXPECTED_HEADERS\n" +
@@ -65,22 +65,19 @@ class CsvExporterTest {
     @Test
     fun `exporting a table with more than one row should result in a Csv with the equivalent lines below the headers`() {
         // given
-        val table = Table()
+        var collection = CodifiableQuoteCollection()
         val artifactId = "foo"
         val section = "one"
         val quote = "foo bar baz"
         val code1 = "nonsense"
         val code2 = "rubbish"
 
-        table.append(
-            artifactId = artifactId, section = section, quote = quote, code = code1
-        )
-        table.append(
-            artifactId = artifactId, section = section, quote = quote, code = code2
-        )
+        collection = collection
+            .append(artifactId = artifactId, section = section, quote = quote)
+            .let { collection.encode(it) { setOf(code1, code2) } }
 
         // when
-        underTest.export(table)
+        underTest.export(collection)
 
         // then
         val expected = "$EXPECTED_HEADERS\n" +
@@ -92,18 +89,18 @@ class CsvExporterTest {
     @Test
     fun `exporting should call flush`() {
         // given
-        val table = Table()
+        val collection = CodifiableQuoteCollection()
         val artifactId = "foo"
         val section = "one"
         val quote = "foo bar baz"
         val code = "nonsense"
 
-        table.append(
-            artifactId = artifactId, section = section, quote = quote, code = code
-        )
+        collection
+            .append(artifactId = artifactId, section = section, quote = quote)
+            .let { collection.encode(it) { setOf(code) } }
 
         // when
-        underTest.export(table)
+        underTest.export(collection)
 
         // then
         verify { mockWriter.flush() }

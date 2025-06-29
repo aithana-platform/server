@@ -1,6 +1,5 @@
 package org.aithana.platform.server.application.impoexpo
 
-import org.aithana.platform.server.core.model.CodedQuotesTable
 import org.aithana.platform.server.core.impoexpo.QuotesCollectionExporter
 import org.aithana.platform.server.core.model.CodifiableQuoteCollection
 import java.io.Writer
@@ -9,15 +8,7 @@ class CsvExporter(
     private val writer: Writer
 ): QuotesCollectionExporter {
 
-
-    //
-    //
-    //
-    // TODO: move up the mapping
-    override fun export(table: CodedQuotesTable) =
-        export(CodifiableQuoteCollection.from(table))
-
-    fun export(codedCollection: CodifiableQuoteCollection) {
+    override fun export(codedCollection: CodifiableQuoteCollection) {
         val nCols = Csv.IndexMapper.entries.size
         val strBuilder = StringBuilder(Csv.OUTPUT_HEADERS.joinToString(Csv.SEPARATOR))
         strBuilder.append("\n")
