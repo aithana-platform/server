@@ -14,6 +14,7 @@ class BatchCsvInOut: CliktCommand() {
     private val input by option(help = "path to input file").required()
     private val output by option(help = "path to output file").required()
     private val context by option(help = "path to project context file").required()
+    private val mapping by option(help = "path to the column mapping YAML file")
 
     override fun run() {
         ensureGoogleApiKey()
@@ -23,7 +24,7 @@ class BatchCsvInOut: CliktCommand() {
             .limitEncodingRateTo(1/5.0)
             .enableLogging()
             .setProjectContextFile(context)
-            .importFromCsv(input)
+            .importCsv(input, mapping)
             .exportToCsv(output)
             .build()
             .process()

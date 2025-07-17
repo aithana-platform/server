@@ -33,6 +33,14 @@ class AithanaBuilder {
 
     // INPUT AND OUTPUT
     //      // IMPORT
+    fun importCsv(
+        csvFileName: String,
+        columnMappingFileName: String?
+    ) = when {
+        columnMappingFileName.isNullOrBlank() -> importFromCsv(csvFileName)
+        else -> importFromCsvWithCustomColumns(csvFileName, columnMappingFileName)
+    }
+
     fun importFromCsv(fileName: String): AithanaBuilder {
         val reader = FileReader(fileName)
         this.importer = CsvImporter(reader)
