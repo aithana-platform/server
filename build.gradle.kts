@@ -25,6 +25,7 @@ dependencies {
     implementation("com.google.genai:google-genai:${gemini_api_version}")
     implementation("com.fasterxml.jackson.core:jackson-databind:${jackson_version}")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jackson_version}")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jackson_version}")
     implementation("com.github.ajalt.clikt:clikt:${clikt_version}")
     implementation("org.slf4j:slf4j-api:${slf4j_version}")
     implementation("io.github.oshai:kotlin-logging-jvm:${klogging_version}")

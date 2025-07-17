@@ -1,0 +1,7 @@
+columnsMapping:
+  artifactId:
+    columnNumber: 1
+  quote:
+    columnNumber: 3
+  section:
+    columnNumber: 2

@@ -9,6 +9,7 @@ import org.aithana.platform.server.core.coder.*
 import org.aithana.platform.server.application.impoexpo.CsvExporter
 import org.aithana.platform.server.application.impoexpo.CsvImporter
 import org.aithana.platform.server.application.impoexpo.TxtContextReader
+import org.aithana.platform.server.application.impoexpo.mapper.YamlRowMapper
 import org.aithana.platform.server.core.impoexpo.*
 import java.io.FileReader
 import java.io.FileWriter
@@ -40,6 +41,16 @@ class AithanaBuilder {
 
     fun customImporter(custom: RawDataImporter): AithanaBuilder {
         this.importer = custom
+        return this
+    }
+
+    fun importFromCsvWithCustomColumns(csvFileName: String, mappingFileName: String): AithanaBuilder {
+        val csvReader = FileReader(csvFileName)
+
+        this.importer = CsvImporter(
+            reader = csvReader,
+            mapper = YamlRowMapper(mappingFileName)
+        )
         return this
     }
 
